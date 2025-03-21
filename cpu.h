@@ -10,7 +10,7 @@ typedef struct {
     uint8_t A;      // Accumulator
     uint8_t PC;     // Program Counter
     uint8_t FLAGS;  // Flags
-    uint8_t RAM[RAM_SIZE];   // 256 bytes RAM  
+    uint8_t *RAM;   // 256 bytes RAM  
 } CPU;
 
 void cpu_init(CPU *cpu);
