@@ -2,26 +2,24 @@
 
 ## Introduction
 
-This is a simple 8-bit game emulator written in C. The goal is to learn **pointers, function pointers, and memory management** while simulating a basic CPU.
+A simple 8-bit game emulator written in C to simulate a basic CPU and learn **pointers, function pointers, and memory management**.
 
 ## Features
 
 - **8-bit CPU simulation**
   - Registers: A, PC, FLAGS
-  - Simple instruction set (LDA, ADD, JMP, etc.)
-- **256-byte RAM simulation**
-- **Execute basic game programs**
+  - 256-byte RAM
+  - Basic instruction set (LDA, ADD, JMP, etc.)
+- **Execute simple game programs**
 
 ## Installation & Execution
 
-### 1. Compile the program
-
+### Compile the program
 ```bash
 gcc emulator.c -o emulator
 ```
 
-### 2. Run the emulator
-
+### Run the emulator
 ```bash
 ./emulator
 ```
@@ -40,12 +38,11 @@ gcc emulator.c -o emulator
 
 ## Future Development
 
-- **Add graphics (SDL2)** for simple rendering
-- **Implement keyboard input** for user interaction
-- **Support more instructions and ROM loading**
+- Add graphics (SDL2) for rendering
+- Implement keyboard input
+- Support more instructions and ROM loading
 
 ## Author
 
 - **Developer:** WanChinTing
 - **Contact:** artyidin1111@gmail.com
-
