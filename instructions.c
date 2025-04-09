@@ -4,6 +4,11 @@
 #include <string.h>
 #include <unistd.h>
 
+
+void clear_screen(){
+    printf("\033[2J"); // Clear the screen]")
+}
+
 void execute_instruction(CPU *cpu){
     uint8_t opcode = cpu->RAM[cpu->PC];     //指令
     uint8_t operand = cpu->RAM[cpu->PC + 1];    //參數
@@ -11,32 +16,32 @@ void execute_instruction(CPU *cpu){
     switch(opcode){
         case NOP:
             sleep(2);
-            printf("NOP: No operation.\n");
+            //printf("NOP: No operation.\n");
             cpu->PC += 1;
             break;
         case LDA:
             cpu->A = operand;
-            printf("LDA: loaded %02X into accumulator (A).\n", cpu->A);
+            //printf("LDA: loaded %02X into accumulator (A).\n", cpu->A);
             cpu->PC += 2;
             break; 
         case ADD:
             cpu->A += operand;
-            printf("ADD: accumulator (A) + %02X = %02X.\n", operand, cpu->A);
+            //printf("ADD: accumulator (A) + %02X = %02X.\n", operand, cpu->A);
             cpu->PC += 2;
             break;
         case SUB:
             cpu->A -= operand;
-            printf("SUB: accumulator (A) - %02X = %02X.\n", operand, cpu->A);
+            //printf("SUB: accumulator (A) - %02X = %02X.\n", operand, cpu->A);
             cpu->PC += 2;
             break;
         case JMP:
             cpu->PC = operand;
-            printf("JMP: jumping to %02X.\n", cpu->PC);
+            //printf("JMP: jumping to %02X.\n", cpu->PC);
             break;
         case JZ:
             if(cpu->FLAGS == 0x01){
                 cpu->PC = operand;
-                printf("JZ: jumping to %02X.\n", cpu->PC);
+                //printf("JZ: jumping to %02X.\n", cpu->PC);
             }else{
                 cpu->PC += 2;
             }
@@ -47,18 +52,19 @@ void execute_instruction(CPU *cpu){
             }else{
                 cpu->FLAGS = 0x00; //Clear FLAGS
             }
-            printf("CMP: Comparing A (%02X) with %02X. FLAGS = %02X\n", cpu->A, operand, cpu->FLAGS);
+            //printf("CMP: Comparing A (%02X) with %02X. FLAGS = %02X\n", cpu->A, operand, cpu->FLAGS);
             cpu->PC += 2;
             break;
         case STORE:
             cpu->RAM[0] = operand;
-            printf("STORE: stored %02X in memory.\n", operand);
+            //printf("STORE: stored %02X in memory.\n", operand);
             cpu->PC += 2;
             break;
         case IN:
             printf("Enter a command(W/A/S/D to move, Q to quit):");
             char input;
             scanf(" %c", &input);   //前面有個空格 讀取input前跳過所有可能的空白字元
+            clear_screen();
             cpu->A = input;
             cpu->PC += 1;
             break;
@@ -79,37 +85,37 @@ void execute_instruction(CPU *cpu){
             break;
         case CLR:
             memset(cpu->RAM, 0, 100);
-            printf("CLR: screen cleared.\n");
+            //printf("CLR: screen cleared.\n");
             cpu->PC += 1;
             break;
         case MOVE_UP:
-            if(cpu->FLAGS == 0x01){
+            if(cpu->FLAGS == 0x01 && cpu->RAM[0]-10 >= 0){
                 cpu->RAM[0] -= 10;
-                printf("MOVE_UP: character moved up.\n");
+                //printf("MOVE_UP: character moved up.\n");
                 cpu->FLAGS = 0x00;
             }
             cpu->PC += 1;
             break;
         case MOVE_DOWN:
-            if(cpu->FLAGS == 0x01){
+            if(cpu->FLAGS == 0x01 && cpu->RAM[0]+10 < 100){
                 cpu->RAM[0] += 10;
-                printf("MOVE_DOWN: character moved down.\n");
+                //printf("MOVE_DOWN: character moved down.\n");
                 cpu->FLAGS = 0x00;
             }
             cpu->PC += 1;
             break;
         case MOVE_LEFT:
-            if(cpu->FLAGS == 0x01){
+            if(cpu->FLAGS == 0x01 && cpu->RAM[0] % 10 != 0){
                 cpu->RAM[0] -= 1;
-                printf("MOVE_LEFT: character moved left.\n");
+                //printf("MOVE_LEFT: character moved left.\n");
                 cpu->FLAGS = 0x00;
             }
             cpu->PC += 1;
             break;
         case MOVE_RIGHT:
-            if(cpu->FLAGS == 0x01){
+            if(cpu->FLAGS == 0x01 && cpu->RAM[0] % 10 != 9){
                 cpu->RAM[0] += 1;
-                printf("MOVE_RIGHT: character moved right.\n");
+                //printf("MOVE_RIGHT: character moved right.\n");
                 cpu->FLAGS = 0x00;
             }
             cpu->PC += 1;
@@ -121,13 +127,13 @@ void execute_instruction(CPU *cpu){
             }
             break;
         case HLT:
-            printf("CPU Halted.");
+            //printf("CPU Halted.");
             cpu->PC += 1;
             exit(0);    //正常結束
         default:
             printf("Unknown opcode: %02X\n", opcode);   //輸出數字至少佔兩位 不足會在前面補零 16進位
             exit(1);    //異常結束
     }
-    printf("CPU State: A = %02X, PC = %02X\n", cpu->A, cpu->PC);
-    printf("-----------------------------\n");
+    //printf("CPU State: A = %02X, PC = %02X\n", cpu->A, cpu->PC);
+    //printf("-----------------------------\n");
 }
