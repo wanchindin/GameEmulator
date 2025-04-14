@@ -17,35 +17,39 @@ int main(){
     printf("CPU initialized successfully!\n");
 
     uint8_t program[] =  {
-        LDA, 55,
-        STORE, 55,
+        LDA, 11,
+        STORE, 11,
         DRAW,
         IN,
         //WASD
         CMP, 'W',
         JZ, 0x1C,
         CMP, 'S',
-        JZ, 0x20,
+        JZ, 0X21,
         CMP, 'A',
-        JZ, 0x24,
+        JZ, 0x26,
         CMP, 'D',
-        JZ, 0x28,
+        JZ, 0x2B,
         CMP, 'Q',
-        JZ, 0x2C,
+        JZ, 0x30,
         JMP, 5, //輸入無效跳回IN
         MOVE_UP, //28 = 0x1C
+        CHECK_EXIT,
         DRAW,
         JMP, 5,
-        MOVE_DOWN,  //32 = 0x20
+        MOVE_DOWN,  //33 = 0x21
+        CHECK_EXIT,
         DRAW,
         JMP, 5,
-        MOVE_LEFT, //36 = 0x24
+        MOVE_LEFT, //38 = 0x26
+        CHECK_EXIT,
         DRAW,
         JMP, 5,
-        MOVE_RIGHT, //40 = 0x28
+        MOVE_RIGHT, //43 = 0x2B
+        CHECK_EXIT,
         DRAW,
         JMP, 5,
-        END_GAME, //44 = 0x2C
+        END_GAME, //48 = 0x30
         HLT
     };
 

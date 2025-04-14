@@ -4,7 +4,18 @@
 #include <string.h>
 #include <unistd.h>
 
-
+char maze[10][10] = {
+    "##########",
+    "#........#",
+    "#..#####.#",
+    "#..#.....#",
+    "#..#..####",
+    "#..#.....#",
+    "#..#####.#",
+    "#........#",
+    "#.....E..#",
+    "##########"  
+};
 void clear_screen(){
     printf("\033[2J"); // Clear the screen]")
 }
@@ -70,17 +81,16 @@ void execute_instruction(CPU *cpu){
             break;
         case DRAW:
             //10x10 matrix
-            for(int i = 0; i < 10; i++){
-                for(int j = 0; j < 10; j++){
-                    if((i * 10 + j) == cpu->RAM[0]){
-                        printf("0 ");   //character
-                    }else{
-                        printf(". ");   //blank
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if ((i * 10 + j) == cpu->RAM[0]) {
+                        printf("0 ");  // 玩家位置
+                    } else {
+                        printf("%c ", maze[i][j]);  // 顯示迷宮內容
                     }
                 }
                 printf("\n");
             }
-            printf("\n");
             cpu->PC += 1;
             break;
         case CLR:
@@ -89,7 +99,8 @@ void execute_instruction(CPU *cpu){
             cpu->PC += 1;
             break;
         case MOVE_UP:
-            if(cpu->FLAGS == 0x01 && cpu->RAM[0]-10 >= 0){
+            if(cpu->FLAGS == 0x01 && cpu->RAM[0]-10 >= 0 && 
+                maze[(cpu->RAM[0] - 10) / 10][(cpu->RAM[0] - 10) % 10] != '#'){
                 cpu->RAM[0] -= 10;
                 //printf("MOVE_UP: character moved up.\n");
                 cpu->FLAGS = 0x00;
@@ -97,7 +108,8 @@ void execute_instruction(CPU *cpu){
             cpu->PC += 1;
             break;
         case MOVE_DOWN:
-            if(cpu->FLAGS == 0x01 && cpu->RAM[0]+10 < 100){
+            if(cpu->FLAGS == 0x01 && cpu->RAM[0]+10 < 100 &&
+                maze[(cpu->RAM[0] + 10) / 10][(cpu->RAM[0] + 10) % 10] != '#'){
                 cpu->RAM[0] += 10;
                 //printf("MOVE_DOWN: character moved down.\n");
                 cpu->FLAGS = 0x00;
@@ -105,7 +117,8 @@ void execute_instruction(CPU *cpu){
             cpu->PC += 1;
             break;
         case MOVE_LEFT:
-            if(cpu->FLAGS == 0x01 && cpu->RAM[0] % 10 != 0){
+            if(cpu->FLAGS == 0x01 && cpu->RAM[0] % 10 != 0 &&
+                maze[cpu->RAM[0] / 10][(cpu->RAM[0] - 1) % 10] != '#'){
                 cpu->RAM[0] -= 1;
                 //printf("MOVE_LEFT: character moved left.\n");
                 cpu->FLAGS = 0x00;
@@ -113,10 +126,18 @@ void execute_instruction(CPU *cpu){
             cpu->PC += 1;
             break;
         case MOVE_RIGHT:
-            if(cpu->FLAGS == 0x01 && cpu->RAM[0] % 10 != 9){
+            if(cpu->FLAGS == 0x01 && cpu->RAM[0] % 10 != 9 &&
+                maze[cpu->RAM[0] / 10][(cpu->RAM[0] + 1) % 10] != '#'){
                 cpu->RAM[0] += 1;
                 //printf("MOVE_RIGHT: character moved right.\n");
                 cpu->FLAGS = 0x00;
+            }
+            cpu->PC += 1;
+            break;
+        case CHECK_EXIT:
+            if (maze[cpu->RAM[0] / 10][cpu->RAM[0] % 10] == 'E') {
+                printf("Congratulations! You reached the exit!\n");
+                exit(0);  // 結束遊戲
             }
             cpu->PC += 1;
             break;

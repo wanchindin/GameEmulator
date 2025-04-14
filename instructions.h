@@ -22,6 +22,7 @@
 #define MOVE_LEFT  0x0D  // Move character left (A)
 #define MOVE_RIGHT 0x0E  // Move character right (D)
 #define END_GAME   0x0F  // End the game
+#define CHECK_EXIT 0x10  // Check if the game should exit
 
 #define HLT   0xFF  // Halt execution
 
